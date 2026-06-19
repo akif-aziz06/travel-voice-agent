@@ -1,0 +1,287 @@
+[
+  {
+    "id": "hvar-croatia-mid-beach",
+    "destination": "Hvar, Croatia",
+    "budget": "mid",
+    "vibe": "beach",
+    "flight": {
+      "route": "JFK → DBV",
+      "price_usd": 480,
+      "airline": "Lufthansa",
+      "duration_hours": 11
+    },
+    "hotel": {
+      "name": "Villa Nora Boutique",
+      "price_per_night_usd": 120,
+      "stars": 4,
+      "highlights": "Cliffside sea view, rooftop pool"
+    },
+    "tags": ["beach", "mid", "off-the-beaten-path", "summer"]
+  },
+  {
+    "id": "tulum-mexico-budget-beach",
+    "destination": "Tulum, Mexico",
+    "budget": "budget",
+    "vibe": "beach",
+    "flight": {
+      "route": "JFK → CUN",
+      "price_usd": 240,
+      "airline": "JetBlue",
+      "duration_hours": 4
+    },
+    "hotel": {
+      "name": "Casa Selva Eco-Cabanas",
+      "price_per_night_usd": 65,
+      "stars": 3,
+      "highlights": "Jungle-to-beach bungalows, free bikes"
+    },
+    "tags": ["beach", "budget", "bohemian", "cenotes"]
+  },
+  {
+    "id": "bora-bora-luxury-beach",
+    "destination": "Bora Bora, French Polynesia",
+    "budget": "luxury",
+    "vibe": "beach",
+    "flight": {
+      "route": "LAX → PPT",
+      "price_usd": 1850,
+      "airline": "Air Tahiti Nui",
+      "duration_hours": 16
+    },
+    "hotel": {
+      "name": "Lagoon Overwater Resort & Spa",
+      "price_per_night_usd": 950,
+      "stars": 5,
+      "highlights": "Private overwater villa, glass-floor lagoon access"
+    },
+    "tags": ["beach", "luxury", "honeymoon", "overwater"]
+  },
+  {
+    "id": "lisbon-portugal-budget-culture",
+    "destination": "Lisbon, Portugal",
+    "budget": "budget",
+    "vibe": "culture",
+    "flight": {
+      "route": "EWR → LIS",
+      "price_usd": 390,
+      "airline": "TAP Air Portugal",
+      "duration_hours": 7
+    },
+    "hotel": {
+      "name": "Alfama Heritage Guesthouse",
+      "price_per_night_usd": 70,
+      "stars": 3,
+      "highlights": "Tiled townhouse in old town, fado nights nearby"
+    },
+    "tags": ["culture", "budget", "historic", "walkable"]
+  },
+  {
+    "id": "kyoto-japan-mid-culture",
+    "destination": "Kyoto, Japan",
+    "budget": "mid",
+    "vibe": "culture",
+    "flight": {
+      "route": "SFO → KIX",
+      "price_usd": 720,
+      "airline": "ANA",
+      "duration_hours": 12
+    },
+    "hotel": {
+      "name": "Gion Machiya Ryokan",
+      "price_per_night_usd": 180,
+      "stars": 4,
+      "highlights": "Traditional machiya, private onsen, tea ceremony"
+    },
+    "tags": ["culture", "mid", "temples", "ryokan"]
+  },
+  {
+    "id": "florence-italy-luxury-culture",
+    "destination": "Florence, Italy",
+    "budget": "luxury",
+    "vibe": "culture",
+    "flight": {
+      "route": "JFK → FLR",
+      "price_usd": 1400,
+      "airline": "ITA Airways",
+      "duration_hours": 10
+    },
+    "hotel": {
+      "name": "Palazzo Arno Grand Suites",
+      "price_per_night_usd": 620,
+      "stars": 5,
+      "highlights": "Renaissance palazzo, Duomo-view terrace, private gallery tours"
+    },
+    "tags": ["culture", "luxury", "renaissance", "wine"]
+  },
+  {
+    "id": "medellin-colombia-budget-adventure",
+    "destination": "Medellín, Colombia",
+    "budget": "budget",
+    "vibe": "adventure",
+    "flight": {
+      "route": "MIA → MDE",
+      "price_usd": 300,
+      "airline": "Avianca",
+      "duration_hours": 4
+    },
+    "hotel": {
+      "name": "Comuna Verde Hostel-Suites",
+      "price_per_night_usd": 55,
+      "stars": 3,
+      "highlights": "Paragliding shuttles, rooftop hammocks, salsa lessons"
+    },
+    "tags": ["adventure", "budget", "paragliding", "nightlife"]
+  },
+  {
+    "id": "queenstown-nz-mid-adventure",
+    "destination": "Queenstown, New Zealand",
+    "budget": "mid",
+    "vibe": "adventure",
+    "flight": {
+      "route": "LAX → ZQN",
+      "price_usd": 980,
+      "airline": "Air New Zealand",
+      "duration_hours": 17
+    },
+    "hotel": {
+      "name": "Remarkables Lodge",
+      "price_per_night_usd": 210,
+      "stars": 4,
+      "highlights": "Bungee and heli-ski desk, alpine lake views"
+    },
+    "tags": ["adventure", "mid", "bungee", "alpine"]
+  },
+  {
+    "id": "patagonia-chile-luxury-adventure",
+    "destination": "Torres del Paine, Chile",
+    "budget": "luxury",
+    "vibe": "adventure",
+    "flight": {
+      "route": "MIA → PUQ",
+      "price_usd": 1600,
+      "airline": "LATAM",
+      "duration_hours": 14
+    },
+    "hotel": {
+      "name": "Explora Patagonia All-Inclusive",
+      "price_per_night_usd": 880,
+      "stars": 5,
+      "highlights": "Guided treks, full-board, glacier-front rooms"
+    },
+    "tags": ["adventure", "luxury", "trekking", "all-inclusive"]
+  },
+  {
+    "id": "mexico-city-budget-city",
+    "destination": "Mexico City, Mexico",
+    "budget": "budget",
+    "vibe": "city",
+    "flight": {
+      "route": "DFW → MEX",
+      "price_usd": 260,
+      "airline": "Aeroméxico",
+      "duration_hours": 2
+    },
+    "hotel": {
+      "name": "Roma Norte Loft Hotel",
+      "price_per_night_usd": 75,
+      "stars": 3,
+      "highlights": "Design-district lofts, rooftop taqueria, art-walk access"
+    },
+    "tags": ["city", "budget", "food", "design"]
+  },
+  {
+    "id": "barcelona-spain-mid-city",
+    "destination": "Barcelona, Spain",
+    "budget": "mid",
+    "vibe": "city",
+    "flight": {
+      "route": "JFK → BCN",
+      "price_usd": 540,
+      "airline": "Iberia",
+      "duration_hours": 8
+    },
+    "hotel": {
+      "name": "Eixample Modernista Hotel",
+      "price_per_night_usd": 165,
+      "stars": 4,
+      "highlights": "Gaudí-block address, tapas concierge, rooftop bar"
+    },
+    "tags": ["city", "mid", "architecture", "tapas"]
+  },
+  {
+    "id": "singapore-luxury-city",
+    "destination": "Singapore",
+    "budget": "luxury",
+    "vibe": "city",
+    "flight": {
+      "route": "SFO → SIN",
+      "price_usd": 1750,
+      "airline": "Singapore Airlines",
+      "duration_hours": 17
+    },
+    "hotel": {
+      "name": "Marina Skypark Suites",
+      "price_per_night_usd": 720,
+      "stars": 5,
+      "highlights": "Infinity skypool, Michelin dining, skyline cabana"
+    },
+    "tags": ["city", "luxury", "skyline", "fine-dining"]
+  },
+  {
+    "id": "chiang-mai-thailand-budget-wellness",
+    "destination": "Chiang Mai, Thailand",
+    "budget": "budget",
+    "vibe": "wellness",
+    "flight": {
+      "route": "LAX → CNX",
+      "price_usd": 620,
+      "airline": "EVA Air",
+      "duration_hours": 19
+    },
+    "hotel": {
+      "name": "Ping River Wellness Garden",
+      "price_per_night_usd": 60,
+      "stars": 3,
+      "highlights": "Daily yoga, Thai massage, vegetarian retreat kitchen"
+    },
+    "tags": ["wellness", "budget", "yoga", "retreat"]
+  },
+  {
+    "id": "bali-indonesia-mid-wellness",
+    "destination": "Ubud, Bali, Indonesia",
+    "budget": "mid",
+    "vibe": "wellness",
+    "flight": {
+      "route": "LAX → DPS",
+      "price_usd": 890,
+      "airline": "Qatar Airways",
+      "duration_hours": 21
+    },
+    "hotel": {
+      "name": "Jungle Canopy Spa Villas",
+      "price_per_night_usd": 195,
+      "stars": 4,
+      "highlights": "Private plunge pool, sound healing, riverside spa"
+    },
+    "tags": ["wellness", "mid", "spa", "jungle"]
+  },
+  {
+    "id": "swiss-alps-luxury-wellness",
+    "destination": "Zermatt, Switzerland",
+    "budget": "luxury",
+    "vibe": "wellness",
+    "flight": {
+      "route": "JFK → ZRH",
+      "price_usd": 1500,
+      "airline": "SWISS",
+      "duration_hours": 9
+    },
+    "hotel": {
+      "name": "Matterhorn Thermal Grand",
+      "price_per_night_usd": 840,
+      "stars": 5,
+      "highlights": "Alpine thermal spa, Matterhorn-view suites, detox cuisine"
+    },
+    "tags": ["wellness", "luxury", "thermal", "alpine"]
+  }
+]

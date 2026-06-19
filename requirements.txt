@@ -41,3 +41,11 @@ uvicorn==0.49.0
 uvloop==0.22.1
 watchfiles==1.2.0
 websockets==16.0
+
+# ─── Atlas real-time voice stack ────────────────────────────────────
+# NOTE: not yet installed in this environment (offline sandbox / Python 3.14).
+# Pinned to the 0.x LiveKit Agents API used throughout arch.md / main.py
+# (VoiceAssistant, llm.ai_callable, fnc_ctx). Install on Python 3.11–3.13:
+#   pip install "livekit-agents[deepgram,elevenlabs,openai,silero]>=0.8,<1.0"
+livekit-agents[deepgram,elevenlabs,openai,silero]>=0.8,<1.0
+livekit-api>=0.5

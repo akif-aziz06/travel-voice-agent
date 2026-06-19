@@ -1,0 +1,98 @@
+{
+  "__default__": {
+    "hotel_per_night": 150,
+    "food_per_day": 55,
+    "activities_per_day": 45,
+    "avg_flight_usd": 700
+  },
+  "Hvar, Croatia": {
+    "hotel_per_night": 120,
+    "food_per_day": 50,
+    "activities_per_day": 40,
+    "avg_flight_usd": 480
+  },
+  "Tulum, Mexico": {
+    "hotel_per_night": 65,
+    "food_per_day": 35,
+    "activities_per_day": 30,
+    "avg_flight_usd": 240
+  },
+  "Bora Bora, French Polynesia": {
+    "hotel_per_night": 950,
+    "food_per_day": 140,
+    "activities_per_day": 120,
+    "avg_flight_usd": 1850
+  },
+  "Lisbon, Portugal": {
+    "hotel_per_night": 70,
+    "food_per_day": 40,
+    "activities_per_day": 30,
+    "avg_flight_usd": 390
+  },
+  "Kyoto, Japan": {
+    "hotel_per_night": 180,
+    "food_per_day": 55,
+    "activities_per_day": 45,
+    "avg_flight_usd": 720
+  },
+  "Florence, Italy": {
+    "hotel_per_night": 620,
+    "food_per_day": 90,
+    "activities_per_day": 80,
+    "avg_flight_usd": 1400
+  },
+  "Medellín, Colombia": {
+    "hotel_per_night": 55,
+    "food_per_day": 30,
+    "activities_per_day": 35,
+    "avg_flight_usd": 300
+  },
+  "Queenstown, New Zealand": {
+    "hotel_per_night": 210,
+    "food_per_day": 60,
+    "activities_per_day": 95,
+    "avg_flight_usd": 980
+  },
+  "Torres del Paine, Chile": {
+    "hotel_per_night": 880,
+    "food_per_day": 70,
+    "activities_per_day": 110,
+    "avg_flight_usd": 1600
+  },
+  "Mexico City, Mexico": {
+    "hotel_per_night": 75,
+    "food_per_day": 35,
+    "activities_per_day": 30,
+    "avg_flight_usd": 260
+  },
+  "Barcelona, Spain": {
+    "hotel_per_night": 165,
+    "food_per_day": 55,
+    "activities_per_day": 45,
+    "avg_flight_usd": 540
+  },
+  "Singapore": {
+    "hotel_per_night": 720,
+    "food_per_day": 75,
+    "activities_per_day": 70,
+    "avg_flight_usd": 1750
+  },
+  "Chiang Mai, Thailand": {
+    "hotel_per_night": 60,
+    "food_per_day": 25,
+    "activities_per_day": 30,
+    "avg_flight_usd": 620
+  },
+  "Ubud, Bali, Indonesia": {
+    "hotel_per_night": 195,
+    "food_per_day": 40,
+    "activities_per_day": 45,
+    "avg_flight_usd": 890
+  },
+  "Zermatt, Switzerland": {
+    "hotel_per_night": 840,
+    "food_per_day": 95,
+    "activities_per_day": 85,
+    "avg_flight_usd": 1500
+  }
+}
