@@ -6,17 +6,16 @@ This module is intentionally decoupled from the LiveKit agent runner
 * Loading of the mock travel datasets (``data/destinations.json`` and
   ``data/rates.json``).
 * The pure business logic for the two concierge tools.
-* The LiveKit function-calling bindings (:class:`AtlasFunctions`) that the
-  agent registers as ``fnc_ctx``.
+
+The LiveKit function-calling bindings (``@function_tool``) live in
+``main.py`` inside the ``AtlasAgent`` class. They delegate to the pure
+async tool functions exported here.
 
 Design notes
 ------------
-LiveKit Agents (and its plugins) are heavy, optional dependencies. To keep the
-tool logic unit-testable and importable in a bare environment — exactly the
-isolation test documented in the README — this module degrades gracefully when
-``livekit`` is not installed: the ``@ai_callable`` decorator and ``TypeInfo``
-annotations become no-ops, while the plain ``async`` tool functions remain
-fully functional.
+This module has zero dependency on LiveKit — it is pure Python. This
+makes the tool logic unit-testable and importable in a bare environment,
+exactly matching the isolation test documented in the README.
 """
 
 from __future__ import annotations
@@ -25,49 +24,9 @@ import json
 import logging
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated, Any
+from typing import Any
 
 logger = logging.getLogger("atlas.tools")
-
-# ---------------------------------------------------------------------------
-# Optional LiveKit binding layer
-# ---------------------------------------------------------------------------
-# When LiveKit is installed we register real function-calling metadata. When it
-# is not, we fall back to inert shims so the rest of the module still imports
-# and runs (pure-Python tool logic + offline tests).
-try:
-    from livekit.agents import llm  # type: ignore
-
-    _FunctionContext = llm.FunctionContext
-    _ai_callable = llm.ai_callable
-    _TypeInfo = llm.TypeInfo
-    LIVEKIT_AVAILABLE = True
-except Exception as exc:  # pragma: no cover - exercised only without livekit
-    logger.warning(
-        "livekit.agents not importable (%s); tools will run in standalone "
-        "mode without function-calling registration.",
-        exc,
-    )
-    LIVEKIT_AVAILABLE = False
-
-    class _FunctionContext:  # type: ignore
-        """Inert stand-in for ``llm.FunctionContext``."""
-
-    def _ai_callable(*_args: Any, **_kwargs: Any):  # type: ignore
-        """No-op replacement for ``llm.ai_callable``; returns the function."""
-
-        def _decorator(func):
-            return func
-
-        return _decorator
-
-    class _TypeInfo:  # type: ignore
-        """Inert stand-in for ``llm.TypeInfo`` usable inside ``Annotated``."""
-
-        def __init__(self, *_args: Any, **_kwargs: Any) -> None:
-            self.args = _args
-            self.kwargs = _kwargs
-
 
 # ---------------------------------------------------------------------------
 # Dataset loading (cached, with structured error handling)
@@ -281,69 +240,6 @@ async def calculate_trip_budget(destination: str, days: int, travelers: int) -> 
         result["total_estimate_usd"],
     )
     return json.dumps(result)
-
-
-# ---------------------------------------------------------------------------
-# LiveKit function-calling context
-# ---------------------------------------------------------------------------
-class AtlasFunctions(_FunctionContext):
-    """Function-calling context bound to the Atlas voice agent.
-
-    Each method is registered with LiveKit via ``@ai_callable`` and delegates to
-    the decoupled pure-logic tools above, keeping registration and logic
-    cleanly separated.
-    """
-
-    @_ai_callable(
-        description=(
-            "Search for a single curated flight and hotel bundle matching the "
-            "traveler's budget tier and travel vibe. Call this as soon as both "
-            "the budget and the vibe are known."
-        )
-    )
-    async def search_curated_destinations(
-        self,
-        budget: Annotated[
-            str,
-            _TypeInfo(description="Budget tier: 'budget', 'mid', or 'luxury'."),
-        ],
-        vibe: Annotated[
-            str,
-            _TypeInfo(
-                description=(
-                    "Travel vibe: 'beach', 'culture', 'adventure', 'city', or "
-                    "'wellness'."
-                )
-            ),
-        ],
-    ) -> str:
-        return await search_curated_destinations(budget=budget, vibe=vibe)
-
-    @_ai_callable(
-        description=(
-            "Calculate an estimated total trip budget in USD from a "
-            "destination, the number of days, and the number of travelers. Call "
-            "this when the user asks how much a trip will cost."
-        )
-    )
-    async def calculate_trip_budget(
-        self,
-        destination: Annotated[
-            str,
-            _TypeInfo(description="Destination city/country, e.g. 'Hvar, Croatia'."),
-        ],
-        days: Annotated[
-            int,
-            _TypeInfo(description="Number of trip days (whole number)."),
-        ],
-        travelers: Annotated[
-            int,
-            _TypeInfo(description="Number of travelers in the party."),
-        ],
-    ) -> str:
-        return await calculate_trip_budget(
-            destination=destination, days=days, travelers=travelers
-        )
 
 
 # ---------------------------------------------------------------------------
