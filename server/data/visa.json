@@ -1,0 +1,49 @@
+{
+  "_note": "Illustrative visa guidance for the Atlas capstone demo. NOT legal advice — always verify with the destination's official consulate before travel.",
+  "requirements": {
+    "Pakistan": {
+      "Croatia": { "requirement": "Visa required", "details": "Schengen-area C visa required; apply at the Croatian embassy before travel.", "max_stay": "90 days" },
+      "Turkey": { "requirement": "eVisa", "details": "Apply online via evisa.gov.tr; approval is usually issued within 24 hours.", "max_stay": "30 days" },
+      "United Arab Emirates": { "requirement": "Visa required", "details": "Sponsored or pre-arranged eVisa required; many airlines can arrange it.", "max_stay": "30 days" },
+      "Thailand": { "requirement": "Visa on arrival", "details": "Visa on arrival available at major airports; carry proof of funds and onward ticket.", "max_stay": "15 days" },
+      "Japan": { "requirement": "Visa required", "details": "Short-stay tourist visa required; apply at the Japanese embassy with itinerary and funds.", "max_stay": "90 days" },
+      "Indonesia": { "requirement": "Visa on arrival", "details": "Visa on arrival (B213) available at Bali and major airports for a fee.", "max_stay": "30 days" },
+      "Mexico": { "requirement": "Visa required", "details": "Tourist visa required unless you hold a valid US/UK/Schengen visa, which grants visa-free entry.", "max_stay": "180 days" },
+      "Singapore": { "requirement": "Visa required", "details": "Pre-arranged entry visa required; apply through an authorised agent.", "max_stay": "30 days" },
+      "Switzerland": { "requirement": "Visa required", "details": "Schengen C visa required; apply at the Swiss embassy before travel.", "max_stay": "90 days" }
+    },
+    "United States": {
+      "Croatia": { "requirement": "Visa-free", "details": "Visa-free for tourism within the Schengen area; ETIAS authorisation expected from 2025.", "max_stay": "90 days" },
+      "Turkey": { "requirement": "Visa-free", "details": "Visa-free for short tourist stays; passport must be valid 6+ months.", "max_stay": "90 days" },
+      "United Arab Emirates": { "requirement": "Visa on arrival", "details": "Free visa on arrival stamped at the airport for US passport holders.", "max_stay": "30 days" },
+      "Thailand": { "requirement": "Visa-free", "details": "Visa exemption on arrival for tourism; onward ticket may be checked.", "max_stay": "30 days" },
+      "Japan": { "requirement": "Visa-free", "details": "Visa-free short-stay for tourism.", "max_stay": "90 days" },
+      "Indonesia": { "requirement": "Visa on arrival", "details": "Visa on arrival available at Bali and major airports for a fee.", "max_stay": "30 days" },
+      "Mexico": { "requirement": "Visa-free", "details": "Visa-free for tourism; complete the FMM tourist form on arrival.", "max_stay": "180 days" },
+      "Singapore": { "requirement": "Visa-free", "details": "Visa-free entry for tourism.", "max_stay": "90 days" },
+      "Switzerland": { "requirement": "Visa-free", "details": "Visa-free within the Schengen area; ETIAS expected from 2025.", "max_stay": "90 days" }
+    },
+    "United Kingdom": {
+      "Croatia": { "requirement": "Visa-free", "details": "Visa-free for tourism within the Schengen area; ETIAS expected from 2025.", "max_stay": "90 days" },
+      "Turkey": { "requirement": "Visa-free", "details": "Visa-free for short tourist stays for UK passport holders.", "max_stay": "90 days" },
+      "United Arab Emirates": { "requirement": "Visa on arrival", "details": "Free visa on arrival stamped at the airport for UK passport holders.", "max_stay": "30 days" },
+      "Thailand": { "requirement": "Visa-free", "details": "Visa exemption on arrival for tourism.", "max_stay": "30 days" },
+      "Japan": { "requirement": "Visa-free", "details": "Visa-free short-stay for tourism.", "max_stay": "90 days" },
+      "Indonesia": { "requirement": "Visa on arrival", "details": "Visa on arrival available at Bali and major airports for a fee.", "max_stay": "30 days" },
+      "Mexico": { "requirement": "Visa-free", "details": "Visa-free for tourism; complete the FMM tourist form on arrival.", "max_stay": "180 days" },
+      "Singapore": { "requirement": "Visa-free", "details": "Visa-free entry for tourism.", "max_stay": "90 days" },
+      "Switzerland": { "requirement": "Visa-free", "details": "Visa-free within the Schengen area; ETIAS expected from 2025.", "max_stay": "90 days" }
+    },
+    "India": {
+      "Croatia": { "requirement": "Visa required", "details": "Schengen C visa required; apply at the Croatian embassy before travel.", "max_stay": "90 days" },
+      "Turkey": { "requirement": "eVisa", "details": "eVisa available online for holders of valid Schengen/US/UK visas; otherwise sticker visa.", "max_stay": "30 days" },
+      "United Arab Emirates": { "requirement": "eVisa", "details": "Pre-arranged eVisa required; commonly arranged via airline or hotel.", "max_stay": "30 days" },
+      "Thailand": { "requirement": "Visa on arrival", "details": "Visa on arrival available at major airports for a fee.", "max_stay": "15 days" },
+      "Japan": { "requirement": "Visa required", "details": "Short-stay tourist visa required; apply at the Japanese embassy.", "max_stay": "90 days" },
+      "Indonesia": { "requirement": "Visa on arrival", "details": "Visa on arrival available at Bali and major airports for a fee.", "max_stay": "30 days" },
+      "Mexico": { "requirement": "Visa-free", "details": "Visa-free if you hold a valid US/UK/Schengen/Canada/Japan visa; otherwise visa required.", "max_stay": "180 days" },
+      "Singapore": { "requirement": "Visa-free", "details": "Visa-free entry for tourism for Indian passport holders.", "max_stay": "30 days" },
+      "Switzerland": { "requirement": "Visa required", "details": "Schengen C visa required; apply at the Swiss embassy before travel.", "max_stay": "90 days" }
+    }
+  }
+}

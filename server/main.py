@@ -27,15 +27,15 @@ from __future__ import annotations
 import json
 import logging
 import os
-import re
 import textwrap
-from typing import Annotated
+from typing import Any
 
 from dotenv import find_dotenv, load_dotenv
 
 # Load the project-root .env before anything reads os.environ.
 load_dotenv(find_dotenv(usecwd=True))
 
+from livekit import rtc
 from livekit.agents import (
     Agent,
     AgentSession,
@@ -49,11 +49,19 @@ from livekit.plugins import deepgram, elevenlabs, groq
 
 # Import the pure tool logic from tools.py
 from server.tools import (
-    search_curated_destinations,
     calculate_trip_budget,
+    fetch_accommodations,
+    fetch_weather,
+    format_visa,
+    format_weather,
+    get_visa_requirement,
+    search_curated_destinations,
 )
 
 logger = logging.getLogger("atlas.agent")
+
+# Data-channel topic the frontend subscribes to for rich tool-result cards.
+TOOL_TOPIC = "atlas.tool"
 
 # ---------------------------------------------------------------------------
 # Atlas persona — system prompt (hardcoded per PRD §4 / arch.md §5.1)
@@ -77,6 +85,15 @@ ATLAS_INSTRUCTIONS = textwrap.dedent("""\
        availability. All recommendations come from your tool calls.
     7. End every recommendation with an implicit next-step question,
        such as "Want me to calculate the full trip cost for you?"
+
+    EXTRA CAPABILITIES — use naturally, only when the user asks or it clearly
+    helps, and still obey the 3-sentence rule:
+    - check_weather: report the current weather at a destination's coordinates.
+    - check_visa_requirements: tell travelers whether they need a tourist visa.
+    - search_accommodations: surface the top hotels in a city.
+    After giving a recommendation, you may proactively offer one of these (for
+    example, "Want me to check the weather or visa rules?") — never recite them
+    as a list.
 
     BUDGET TIERS: "budget" (< $1,000/person), "mid" ($1,000-$3,000),
                   "luxury" (> $3,000)
@@ -124,6 +141,29 @@ class AtlasAgent(Agent):
             llm=_build_llm(),
             instructions=ATLAS_INSTRUCTIONS,
         )
+        # Bound after the room connects so tools can stream rich UI cards.
+        self._room: rtc.Room | None = None
+
+    def bind_room(self, room: rtc.Room) -> None:
+        """Attach the connected room so tool calls can publish UI cards."""
+        self._room = room
+
+    async def _publish_card(self, tool: str, data: dict[str, Any]) -> None:
+        """Stream a structured tool result to the frontend over the data channel.
+
+        Best-effort: a publish failure must never break the voice pipeline.
+        """
+        room = self._room
+        if room is None:
+            logger.debug("No room bound; skipping '%s' card publish.", tool)
+            return
+        try:
+            payload = json.dumps({"type": "tool_result", "tool": tool, "data": data})
+            await room.local_participant.publish_data(
+                payload, topic=TOOL_TOPIC, reliable=True
+            )
+        except Exception:
+            logger.exception("Failed to publish '%s' tool card.", tool)
 
     @function_tool()
     async def search_curated_destinations(
@@ -142,6 +182,10 @@ class AtlasAgent(Agent):
         """
         logger.info("Tool called: search_curated_destinations(budget=%s, vibe=%s)", budget, vibe)
         result = await search_curated_destinations(budget=budget, vibe=vibe)
+        try:
+            await self._publish_card("destination", json.loads(result))
+        except json.JSONDecodeError:
+            logger.warning("Could not parse destination result for card publish.")
         return result
 
     @function_tool()
@@ -165,7 +209,85 @@ class AtlasAgent(Agent):
         result = await calculate_trip_budget(
             destination=destination, days=days, travelers=travelers
         )
+        try:
+            await self._publish_card("budget", json.loads(result))
+        except json.JSONDecodeError:
+            logger.warning("Could not parse budget result for card publish.")
         return result
+
+    @function_tool()
+    async def check_weather(
+        self,
+        context: RunContext,
+        latitude: float,
+        longitude: float,
+    ) -> str:
+        """Check the current weather at a destination using its coordinates.
+        Call this when the user asks about weather, climate, or what to pack.
+
+        Args:
+            latitude: Destination latitude in decimal degrees (e.g. 43.17).
+            longitude: Destination longitude in decimal degrees (e.g. 16.44).
+        """
+        logger.info("Tool called: check_weather(lat=%s, lon=%s)", latitude, longitude)
+        data = await fetch_weather(latitude, longitude)
+        await self._publish_card("weather", data)
+        return format_weather(data)
+
+    @function_tool()
+    async def check_visa_requirements(
+        self,
+        context: RunContext,
+        origin_country: str,
+        destination_country: str,
+    ) -> str:
+        """Check tourist visa requirements between two countries. Call this when
+        the user asks whether they need a visa to visit somewhere.
+
+        Args:
+            origin_country: The traveler's passport country, e.g. 'Pakistan'.
+            destination_country: The country they want to visit, e.g. 'Croatia'.
+        """
+        logger.info(
+            "Tool called: check_visa_requirements(%s -> %s)",
+            origin_country,
+            destination_country,
+        )
+        data = get_visa_requirement(origin_country, destination_country)
+        await self._publish_card("visa", data)
+        return format_visa(data)
+
+    @function_tool()
+    async def search_accommodations(
+        self,
+        context: RunContext,
+        city: str,
+        check_in_date: str | None = None,
+        nights: int = 2,
+        adults: int = 2,
+    ) -> str:
+        """Find the top hotels in a city via Booking.com. Call this when the user
+        asks about where to stay, hotels, or accommodation.
+
+        Args:
+            city: Destination city name, e.g. 'Barcelona' or 'Hvar'.
+            check_in_date: Optional check-in date as 'YYYY-MM-DD'. Defaults to
+                about a month out if the user doesn't specify one.
+            nights: Number of nights to stay (default 2).
+            adults: Number of adult guests (default 2).
+        """
+        logger.info(
+            "Tool called: search_accommodations(city=%s, check_in=%s, nights=%s, adults=%s)",
+            city,
+            check_in_date,
+            nights,
+            adults,
+        )
+        data = await fetch_accommodations(
+            city, check_in_date=check_in_date, nights=nights, adults=adults
+        )
+        await self._publish_card("hotels", data)
+        return json.dumps(data)
 
 
 # ---------------------------------------------------------------------------
@@ -175,18 +297,20 @@ async def entrypoint(ctx: JobContext) -> None:
     """Handle a dispatched LiveKit job: connect, assemble Atlas, and greet."""
     logger.info("Atlas worker received job for room %s.", ctx.room.name)
 
+    agent = AtlasAgent()
     session = AgentSession(
         stt=deepgram.STT(model="nova-2", language="en"),
         tts=elevenlabs.TTS(),
     )
 
     await session.start(
-        agent=AtlasAgent(),
+        agent=agent,
         room=ctx.room,
     )
 
-    # Connect to the room
+    # Connect to the room, then bind it so tool calls can stream UI cards.
     await ctx.connect()
+    agent.bind_room(ctx.room)
 
     # Atlas speaks first — autoplayed greeting (PRD §6.1).
     await session.generate_reply(
