@@ -9,10 +9,10 @@ Pipeline
 Deepgram STT (Nova-2) -> Groq Llama-3 (or local Ollama)
 -> ElevenLabs TTS, orchestrated by LiveKit's ``AgentSession``.
 
-Run
+Run (from the repository root, so the `server` package resolves)
 ---
-    python server/main.py dev      # connect to LiveKit and wait for dispatch
-    python server/main.py start    # production worker mode
+    python -m server.main dev      # connect to LiveKit and wait for dispatch
+    python -m server.main start    # production worker mode
 
 Environment variables (loaded from the project-root ``.env``):
     LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET   (required)
