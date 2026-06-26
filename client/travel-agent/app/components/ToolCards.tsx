@@ -135,7 +135,7 @@ function WeatherCard({ data }: { data: WeatherCardData }) {
 }
 
 function VisaCard({ data }: { data: VisaCardData }) {
-  const tone = /free|on arrival/i.test(data.requirement)
+  const tone = /no visa|free|on arrival/i.test(data.requirement)
     ? "text-emerald-300"
     : /required/i.test(data.requirement)
       ? "text-rose-300"

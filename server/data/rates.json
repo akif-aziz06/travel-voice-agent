@@ -5,6 +5,24 @@
     "activities_per_day": 45,
     "avg_flight_usd": 700
   },
+  "Hunza Valley, Pakistan": {
+    "hotel_per_night": 95,
+    "food_per_day": 22,
+    "activities_per_day": 30,
+    "avg_flight_usd": 140
+  },
+  "Skardu, Pakistan": {
+    "hotel_per_night": 190,
+    "food_per_day": 30,
+    "activities_per_day": 55,
+    "avg_flight_usd": 180
+  },
+  "Naran Kaghan, Pakistan": {
+    "hotel_per_night": 55,
+    "food_per_day": 18,
+    "activities_per_day": 25,
+    "avg_flight_usd": 80
+  },
   "Hvar, Croatia": {
     "hotel_per_night": 120,
     "food_per_day": 50,

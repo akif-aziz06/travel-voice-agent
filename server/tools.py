@@ -418,6 +418,22 @@ def get_visa_requirement(origin_country: str, destination_country: str) -> dict[
     """Return structured visa guidance for an origin → destination pair."""
     origin = _canonical_country(origin_country)
     destination = _canonical_country(destination_country)
+
+    # Same-country trips are domestic — no visa or border control applies.
+    if origin and origin == destination:
+        return {
+            "origin": origin,
+            "destination": destination,
+            "requirement": "No visa required",
+            "details": (
+                f"This is domestic travel within {origin} — no visa or border "
+                "crossing is involved."
+            ),
+            "max_stay": "",
+            "known": True,
+            "domestic": True,
+        }
+
     matrix = load_visa()
 
     entry = matrix.get(origin, {}).get(destination)
@@ -447,6 +463,11 @@ def get_visa_requirement(origin_country: str, destination_country: str) -> dict[
 
 def format_visa(data: dict[str, str]) -> str:
     """Render visa guidance as a concise spoken sentence."""
+    if data.get("domestic"):
+        return (
+            f"Good news — traveling within {data.get('destination', 'the country')} "
+            "is domestic, so you won't need a visa at all."
+        )
     requirement = data.get("requirement", "")
     origin = data.get("origin", "")
     destination = data.get("destination", "")

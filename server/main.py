@@ -45,7 +45,7 @@ from livekit.agents import (
     cli,
     function_tool,
 )
-from livekit.plugins import deepgram, elevenlabs, groq
+from livekit.plugins import deepgram, elevenlabs, openai
 
 # Import the pure tool logic from tools.py
 from server.tools import (
@@ -85,15 +85,20 @@ ATLAS_INSTRUCTIONS = textwrap.dedent("""\
        availability. All recommendations come from your tool calls.
     7. End every recommendation with an implicit next-step question,
        such as "Want me to calculate the full trip cost for you?"
+    8. NEVER speak or write tool names, function-call syntax, XML tags, or JSON.
+       To use a tool, invoke it through the function interface — your spoken
+       words must always be natural, human conversation and nothing else.
 
-    EXTRA CAPABILITIES — use naturally, only when the user asks or it clearly
-    helps, and still obey the 3-sentence rule:
-    - check_weather: report the current weather at a destination's coordinates.
-    - check_visa_requirements: tell travelers whether they need a tourist visa.
-    - search_accommodations: surface the top hotels in a city.
-    After giving a recommendation, you may proactively offer one of these (for
-    example, "Want me to check the weather or visa rules?") — never recite them
-    as a list.
+    EXTRA CAPABILITIES — when the user asks about any of these, you MUST call the
+    matching tool and answer ONLY from its result; never answer from your own
+    knowledge, even when the answer seems obvious:
+    - check_weather: ALWAYS call for any weather, climate, or what-to-pack question.
+    - check_visa_requirements: ALWAYS call for any visa or entry question,
+      including domestic trips where the origin and destination country are the
+      same.
+    - search_accommodations: ALWAYS call for any hotel or where-to-stay question.
+    After giving a recommendation you may proactively offer one (for example,
+    "Want me to check the weather or visa rules?") — never recite them as a list.
 
     BUDGET TIERS: "budget" (< $1,000/person), "mid" ($1,000-$3,000),
                   "luxury" (> $3,000)
@@ -108,22 +113,33 @@ ATLAS_INSTRUCTIONS = textwrap.dedent("""\
 # LLM backend selection — Groq (preferred) with Ollama fallback
 # ---------------------------------------------------------------------------
 def _build_llm():
-    """Return a configured LLM, preferring Groq and falling back to Ollama."""
+    """Return a configured LLM, preferring Groq and falling back to Ollama.
+
+    We use the OpenAI-compatible plugin (not the dedicated ``groq`` plugin) so we
+    can set ``_strict_tool_schema=False``. Groq's Llama models do NOT support
+    OpenAI strict-mode tool schemas: with strict enabled the model intermittently
+    returns tool calls as literal ``<function=...>{...}</function>`` TEXT instead
+    of structured tool_calls — which then gets spoken by TTS and silently breaks
+    function calling (no tool cards). Disabling strict makes tool calls reliable.
+    """
     groq_key = os.getenv("GROQ_API_KEY", "").strip()
     ollama_base = os.getenv("OLLAMA_BASE_URL", "").strip()
 
     if groq_key and not groq_key.startswith("gsk_xxx"):
-        logger.info("LLM backend: Groq (llama-3.3-70b-versatile).")
-        return groq.LLM(model="llama-3.3-70b-versatile", api_key=groq_key)
+        logger.info("LLM backend: Groq (llama-3.3-70b-versatile), strict tools disabled.")
+        return openai.LLM(
+            model="llama-3.3-70b-versatile",
+            base_url="https://api.groq.com/openai/v1",
+            api_key=groq_key,
+            _strict_tool_schema=False,
+        )
 
     if ollama_base:
         logger.info("LLM backend: local Ollama at %s (llama3).", ollama_base)
-        # For Ollama, use the openai-compatible plugin
-        from livekit.plugins import openai
         base_url = ollama_base.rstrip("/")
         if not base_url.endswith("/v1"):
             base_url = f"{base_url}/v1"
-        return openai.LLM(model="llama3", base_url=base_url)
+        return openai.LLM(model="llama3", base_url=base_url, _strict_tool_schema=False)
 
     raise RuntimeError(
         "No LLM backend configured. Set GROQ_API_KEY or OLLAMA_BASE_URL in .env."

@@ -1,5 +1,62 @@
 [
   {
+    "id": "hunza-valley-pakistan-mid-adventure",
+    "destination": "Hunza Valley, Pakistan",
+    "budget": "mid",
+    "vibe": "adventure",
+    "flight": {
+      "route": "LHE → GIL",
+      "price_usd": 140,
+      "airline": "PIA",
+      "duration_hours": 2
+    },
+    "hotel": {
+      "name": "Luxus Hunza Attabad Lake Resort",
+      "price_per_night_usd": 95,
+      "stars": 4,
+      "highlights": "Attabad Lake views, cherry orchards, Karakoram peaks"
+    },
+    "tags": ["adventure", "mid", "mountains", "karakoram"]
+  },
+  {
+    "id": "skardu-pakistan-luxury-adventure",
+    "destination": "Skardu, Pakistan",
+    "budget": "luxury",
+    "vibe": "adventure",
+    "flight": {
+      "route": "LHE → KDU",
+      "price_usd": 180,
+      "airline": "PIA",
+      "duration_hours": 2
+    },
+    "hotel": {
+      "name": "Shangrila Resort Skardu",
+      "price_per_night_usd": 190,
+      "stars": 4,
+      "highlights": "Lower Kachura Lake shore, gateway to K2 and Deosai"
+    },
+    "tags": ["adventure", "luxury", "k2", "deosai"]
+  },
+  {
+    "id": "naran-kaghan-pakistan-budget-wellness",
+    "destination": "Naran Kaghan, Pakistan",
+    "budget": "budget",
+    "vibe": "wellness",
+    "flight": {
+      "route": "LHE → ISB + scenic drive",
+      "price_usd": 80,
+      "airline": "PIA + road",
+      "duration_hours": 8
+    },
+    "hotel": {
+      "name": "Pine Park Hotel Naran",
+      "price_per_night_usd": 55,
+      "stars": 3,
+      "highlights": "Riverside pine forest, base for Saif-ul-Malook lake"
+    },
+    "tags": ["wellness", "budget", "lakes", "roadtrip"]
+  },
+  {
     "id": "hvar-croatia-mid-beach",
     "destination": "Hvar, Croatia",
     "budget": "mid",
