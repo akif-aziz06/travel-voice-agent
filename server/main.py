@@ -6,7 +6,7 @@ STT -> LLM -> TTS pipeline using the LiveKit Agents v1.x API
 
 Pipeline
 --------
-Deepgram STT (Nova-2) -> Groq Llama-3 (or local Ollama)
+Deepgram STT (Nova-2) -> Anthropic Claude (or Groq Llama / local Ollama)
 -> ElevenLabs TTS, orchestrated by LiveKit's ``AgentSession``.
 
 Run (from the repository root, so the `server` package resolves)
@@ -18,7 +18,8 @@ Environment variables (loaded from the project-root ``.env``):
     LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET   (required)
     DEEPGRAM_API_KEY                                   (required, STT)
     ELEVEN_API_KEY                                     (required, TTS)
-    GROQ_API_KEY                                       (LLM; or use Ollama)
+    ANTHROPIC_API_KEY                                  (LLM; preferred)
+    GROQ_API_KEY                                       (LLM fallback)
     OLLAMA_BASE_URL                                    (optional LLM fallback)
 """
 
@@ -45,7 +46,7 @@ from livekit.agents import (
     cli,
     function_tool,
 )
-from livekit.plugins import deepgram, elevenlabs, openai
+from livekit.plugins import anthropic, deepgram, elevenlabs, openai
 
 # Import the pure tool logic from tools.py
 from server.tools import (
@@ -110,21 +111,37 @@ ATLAS_INSTRUCTIONS = textwrap.dedent("""\
 
 
 # ---------------------------------------------------------------------------
-# LLM backend selection — Groq (preferred) with Ollama fallback
+# LLM backend selection — Anthropic (preferred), then Groq, then Ollama
 # ---------------------------------------------------------------------------
-def _build_llm():
-    """Return a configured LLM, preferring Groq and falling back to Ollama.
+# Claude model for the voice pipeline. Haiku 4.5 is the fastest + cheapest
+# Claude tier ($1/$5 per 1M tokens) — the right tradeoff for real-time voice
+# where per-turn latency is spoken aloud. Swap to "claude-sonnet-4-6" or
+# "claude-opus-4-8" if you want more capability at higher latency/cost.
+ANTHROPIC_MODEL = "claude-haiku-4-5"
 
-    We use the OpenAI-compatible plugin (not the dedicated ``groq`` plugin) so we
-    can set ``_strict_tool_schema=False``. Groq's Llama models do NOT support
-    OpenAI strict-mode tool schemas: with strict enabled the model intermittently
-    returns tool calls as literal ``<function=...>{...}</function>`` TEXT instead
-    of structured tool_calls — which then gets spoken by TTS and silently breaks
-    function calling (no tool cards). Disabling strict makes tool calls reliable.
+
+def _build_llm():
+    """Return a configured LLM, preferring Anthropic Claude.
+
+    Anthropic is pay-as-you-go (no free daily-token wall like Groq's free tier)
+    and its tool calling is native and reliable, so — unlike the Groq/Llama path
+    below — it needs no ``_strict_tool_schema=False`` workaround. Groq and Ollama
+    remain as fallbacks if no Anthropic key is set.
     """
+    anthropic_key = os.getenv("ANTHROPIC_API_KEY", "").strip()
     groq_key = os.getenv("GROQ_API_KEY", "").strip()
     ollama_base = os.getenv("OLLAMA_BASE_URL", "").strip()
 
+    if anthropic_key and not anthropic_key.startswith("sk-ant-xxx"):
+        logger.info("LLM backend: Anthropic (%s).", ANTHROPIC_MODEL)
+        return anthropic.LLM(model=ANTHROPIC_MODEL, api_key=anthropic_key)
+
+    # Groq uses the OpenAI-compatible plugin (not the dedicated ``groq`` plugin) so
+    # we can set ``_strict_tool_schema=False``. Groq's Llama models do NOT support
+    # OpenAI strict-mode tool schemas: with strict enabled the model intermittently
+    # returns tool calls as literal ``<function=...>{...}</function>`` TEXT instead
+    # of structured tool_calls — which then gets spoken by TTS and silently breaks
+    # function calling (no tool cards). Disabling strict makes tool calls reliable.
     if groq_key and not groq_key.startswith("gsk_xxx"):
         logger.info("LLM backend: Groq (llama-3.3-70b-versatile), strict tools disabled.")
         return openai.LLM(
@@ -142,7 +159,8 @@ def _build_llm():
         return openai.LLM(model="llama3", base_url=base_url, _strict_tool_schema=False)
 
     raise RuntimeError(
-        "No LLM backend configured. Set GROQ_API_KEY or OLLAMA_BASE_URL in .env."
+        "No LLM backend configured. Set ANTHROPIC_API_KEY (preferred), "
+        "GROQ_API_KEY, or OLLAMA_BASE_URL in .env."
     )
 
 

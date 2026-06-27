@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /home/akif-aziz/Public/travel-voice-agent/travel-voice-agent/client/travel-agent *)",
+      "Skill(claude-api)",
+      "Skill(claude-api:*)",
+      "Bash(.venv/bin/pip list *)",
+      "Bash(.venv/bin/pip install *)"
+    ],
+    "additionalDirectories": [
+      "/home/akif-aziz/Public/travel-voice-agent/travel-voice-agent/client/travel-agent/.next"
+    ]
+  }
+}
