@@ -5,7 +5,11 @@
       "Skill(claude-api)",
       "Skill(claude-api:*)",
       "Bash(.venv/bin/pip list *)",
-      "Bash(.venv/bin/pip install *)"
+      "Bash(.venv/bin/pip install *)",
+      "Bash(sed -E 's/=\\(.{0,6}\\).*/=\\\\1...\\(set\\)/')",
+      "Bash(python -c \"from livekit.plugins import deepgram; print\\('deepgram.TTS:', hasattr\\(deepgram,'TTS'\\)\\)\")",
+      "Bash(python -c \"from livekit.plugins import openai; print\\('openai.TTS:', hasattr\\(openai,'TTS'\\)\\)\")",
+      "Bash(.venv/bin/python -c ' *)"
     ],
     "additionalDirectories": [
       "/home/akif-aziz/Public/travel-voice-agent/travel-voice-agent/client/travel-agent/.next"

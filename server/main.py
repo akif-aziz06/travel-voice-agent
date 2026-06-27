@@ -7,7 +7,7 @@ STT -> LLM -> TTS pipeline using the LiveKit Agents v1.x API
 Pipeline
 --------
 Deepgram STT (Nova-2) -> Anthropic Claude (or Groq Llama / local Ollama)
--> ElevenLabs TTS, orchestrated by LiveKit's ``AgentSession``.
+-> Deepgram Aura-2 TTS, orchestrated by LiveKit's ``AgentSession``.
 
 Run (from the repository root, so the `server` package resolves)
 ---
@@ -16,8 +16,7 @@ Run (from the repository root, so the `server` package resolves)
 
 Environment variables (loaded from the project-root ``.env``):
     LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET   (required)
-    DEEPGRAM_API_KEY                                   (required, STT)
-    ELEVEN_API_KEY                                     (required, TTS)
+    DEEPGRAM_API_KEY                                   (required, STT + TTS)
     ANTHROPIC_API_KEY                                  (LLM; preferred)
     GROQ_API_KEY                                       (LLM fallback)
     OLLAMA_BASE_URL                                    (optional LLM fallback)
@@ -46,7 +45,7 @@ from livekit.agents import (
     cli,
     function_tool,
 )
-from livekit.plugins import anthropic, deepgram, elevenlabs, openai
+from livekit.plugins import anthropic, deepgram, openai
 
 # Import the pure tool logic from tools.py
 from server.tools import (
@@ -334,7 +333,10 @@ async def entrypoint(ctx: JobContext) -> None:
     agent = AtlasAgent()
     session = AgentSession(
         stt=deepgram.STT(model="nova-2", language="en"),
-        tts=elevenlabs.TTS(),
+        # Deepgram Aura-2 TTS (reuses DEEPGRAM_API_KEY). "thalia" is a clear,
+        # confident, energetic voice that suits Atlas's persona. Swap the model
+        # for another Aura-2 voice (e.g. "aura-2-andromeda-en") to taste.
+        tts=deepgram.TTS(model="aura-2-thalia-en"),
     )
 
     await session.start(
